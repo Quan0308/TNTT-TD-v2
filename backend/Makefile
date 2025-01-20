@@ -1,7 +1,7 @@
 # Variables
 BINARY_NAME=main-api
-CMD_DIR=./main-api/cmd
-BIN_DIR=./bin
+CMD_DIR=cmd
+BIN_DIR=bin
 
 # Default target
 .PHONY: all
@@ -9,8 +9,8 @@ all: build
 
 # Run the application
 .PHONY: run
-run:
-	go run $(CMD_DIR)/main.go
+run: build
+	@./bin/main-api
 
 # Build the application
 .PHONY: build
