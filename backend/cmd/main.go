@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/Quan0308/main-api/api"
+	"github.com/Quan0308/main-api/config"
 	"github.com/Quan0308/main-api/middlewares"
 	"github.com/gorilla/mux"
 )
 
 func main() {
-	port := "8080"
+	port := config.Envs.PORT
 	addr := ":" + port
 	server := mux.NewRouter()
 
