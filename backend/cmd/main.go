@@ -20,7 +20,7 @@ func main() {
 	defer db.Close()
 
 	v2Router := http.NewServeMux()
-	api.RegisterRoutes(v2Router)
+	api.RegisterRoutes(v2Router, db)
 
 	mainRouter := http.NewServeMux()
 	mainRouter.Handle("/api/v2/", http.StripPrefix("/api/v2", v2Router))

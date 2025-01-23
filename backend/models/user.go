@@ -30,3 +30,8 @@ type User struct {
 	CreatedBy        string      `json:"createdBy" db:"created_by"`
 	UpdatedBy        string      `json:"updatedBy" db:"updated_by"`
 }
+
+type CurrentUser struct {
+	Id    uuid.UUID   `json:"id"`
+	Roles []user.Role `json:"roles"`
+}
