@@ -1,4 +1,4 @@
-package handlers
+package interfaces
 
 type AuthHandler interface {
 	SignUp(email string, password string) (string, error)

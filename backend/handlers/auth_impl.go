@@ -1,8 +1,10 @@
 package handlers
 
+import "github.com/Quan0308/main-api/core/interfaces"
+
 type authHandlerImpl struct{}
 
-func NewAuthHandler() AuthHandler {
+func NewAuthHandler() interfaces.AuthHandler {
 	return &authHandlerImpl{}
 }
 

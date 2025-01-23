@@ -8,12 +8,9 @@ import (
 )
 
 type Config struct {
-	PORT string
-
-	DB_USER     string
-	DB_PASSWORD string
-	DB_ADDRESS  string
-	DB_NAME     string
+	ADDR              string
+	DRIVER            string
+	CONNECTION_STRING string
 }
 
 func initConfig() Config {
@@ -23,10 +20,9 @@ func initConfig() Config {
 	}
 
 	return Config{
-		PORT:        getEnv("PORT", "8080"),
-		DB_USER:     getEnv("DB_USER", "root"),
-		DB_PASSWORD: getEnv("DB_PASSWORD", "1"),
-		DB_NAME:     getEnv("DB_NAME", "system_manage"),
+		ADDR:              ":" + getEnv("PORT", "8080"),
+		DRIVER:            getEnv("DRIVER", ""),
+		CONNECTION_STRING: getEnv("CONNECTION_STRING", ""),
 	}
 }
 

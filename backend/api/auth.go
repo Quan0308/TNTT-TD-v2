@@ -4,15 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Quan0308/main-api/handlers"
-	"github.com/gorilla/mux"
+	core "github.com/Quan0308/main-api/core/interfaces"
 )
 
 type AuthAPI struct {
-	authHandler handlers.AuthHandler
+	authHandler core.AuthHandler
 }
 
-func NewAuthAPI(authHandler handlers.AuthHandler) *AuthAPI {
+func NewAuthAPI(authHandler core.AuthHandler) *AuthAPI {
 	return &AuthAPI{authHandler: authHandler}
 }
 
@@ -37,6 +36,7 @@ func (api *AuthAPI) SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(msg))
 }
 
-func (api *AuthAPI) RegisterRoutes(server *mux.Router) {
-	server.HandleFunc("/register", api.SignUpHandler).Methods(http.MethodPost)
+func (api *AuthAPI) RegisterRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("POST /register", api.SignUpHandler)
+
 }
