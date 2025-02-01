@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/Quan0308/main-api/core/interfaces"
+	"github.com/Quan0308/main-api/interfaces"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )

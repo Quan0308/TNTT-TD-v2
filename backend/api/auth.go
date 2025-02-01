@@ -1,69 +1,69 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 
-	core "github.com/Quan0308/main-api/core/interfaces"
+	"github.com/Quan0308/main-api/core/dtos"
+	"github.com/Quan0308/main-api/core/utils"
+	authDto "github.com/Quan0308/main-api/dtos"
+	messagesEnum "github.com/Quan0308/main-api/enums/messages"
+	"github.com/Quan0308/main-api/interfaces"
 )
 
 type AuthAPI struct {
-	authHandler core.AuthHandler
+	authHandler interfaces.AuthHandler
 }
 
-func NewAuthAPI(authHandler core.AuthHandler) *AuthAPI {
+func NewAuthAPI(authHandler interfaces.AuthHandler) *AuthAPI {
 	return &AuthAPI{authHandler: authHandler}
 }
 
-func (api *AuthAPI) SignUpHandler(w http.ResponseWriter, r *http.Request) {
-	var payload struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		return
-	}
-
-	msg, err := api.authHandler.SignUp(payload.Email, payload.Password)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(msg))
-}
-
 func (api *AuthAPI) SignInHandler(w http.ResponseWriter, r *http.Request) {
-	var payload struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
+	var payload authDto.LoginDto
 
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+	decodeErr := utils.Decode(r, &payload)
+
+	if decodeErr != nil {
+		utils.Response(w, dtos.Response{
+			Message:    "Invalid Request body",
+			StatusCode: http.StatusInternalServerError,
+		})
 		return
 	}
 
-	userId, err := api.authHandler.SignIn(payload.Email, payload.Password)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	response := map[string]string{"userId": userId.String()}
-	w.Header().Set("Content-Type", "application/json")
+	message, validateErr := utils.DoValidate(payload)
 
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+	if validateErr != nil {
+		utils.Response(w, dtos.Response{
+			Message:    message,
+			StatusCode: http.StatusBadRequest,
+		})
 		return
 	}
+
+	userId, handlerErr := api.authHandler.SignIn(payload.Email, payload.Password)
+	if handlerErr != nil {
+		utils.Response(w, dtos.Response{
+			Message:    "Error when sign in",
+			StatusCode: http.StatusInternalServerError,
+		})
+		return
+	}
+
+	data := authDto.LoginRes{
+		AccessToken:  userId.String(),
+		RefreshToken: userId.String(),
+	}
+
+	response := dtos.Response{
+		Data:       data,
+		Message:    string(messagesEnum.LoginSuccess),
+		StatusCode: http.StatusOK,
+	}
+
+	utils.Response(w, response)
 }
 
 func (api *AuthAPI) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("POST /register", api.SignUpHandler)
 	mux.HandleFunc("POST /login", api.SignInHandler)
-
 }
