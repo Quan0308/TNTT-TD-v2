@@ -4,3 +4,5 @@ bin
 tmp
 ecom
 .env
+
+.DS_STORE
