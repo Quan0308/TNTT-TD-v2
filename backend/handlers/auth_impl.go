@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"context"
+	"github.com/Quan0308/main-api/core/base"
 	"github.com/Quan0308/main-api/interfaces"
+	"github.com/Quan0308/main-api/models"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
@@ -16,17 +19,25 @@ func NewAuthHandler(db *sqlx.DB) interfaces.AuthHandler {
 	}
 }
 
-func (a *authHandlerImpl) SignUp(email string, password string) (string, error) {
-	return "success", nil
-}
+func (a *authHandlerImpl) LogIn(ctx context.Context, email string, password string) (uuid.UUID, error) {
+	var user models.User
+	query := "select * from users where email = ?"
 
-func (a *authHandlerImpl) SignIn(email string, password string) (uuid.UUID, error) {
-	query := "select id from users where email = ?"
-	var userId uuid.UUID
-	err := a.db.QueryRow(query, email).Scan(&userId)
+	uow := base.NewUnitOfWork(a.db)
 
+	err := uow.Begin()
 	if err != nil {
+		uow.RollBack()
 		return uuid.Nil, err
 	}
-	return userId, nil
+
+	err = uow.GetContext(ctx, &user, query, email)
+
+	if err != nil {
+		uow.RollBack()
+		return uuid.Nil, err
+	}
+
+	uow.Commit()
+	return user.Id, nil
 }

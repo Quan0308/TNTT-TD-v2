@@ -41,7 +41,7 @@ func (api *AuthAPI) SignInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userId, handlerErr := api.authHandler.SignIn(payload.Email, payload.Password)
+	userId, handlerErr := api.authHandler.LogIn(r.Context(), payload.Email, payload.Password)
 	if handlerErr != nil {
 		utils.Response(w, dtos.Response{
 			Message:    "Error when sign in",
