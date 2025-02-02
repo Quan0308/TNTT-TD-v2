@@ -6,6 +6,7 @@ import (
 
 	"github.com/Quan0308/main-api/api"
 	"github.com/Quan0308/main-api/config"
+	"github.com/Quan0308/main-api/container"
 	"github.com/Quan0308/main-api/core/middlewares"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -19,8 +20,11 @@ func main() {
 	}
 	defer db.Close()
 
+	c := container.NewContainer()
+	c.Init(db)
+
 	v2Router := http.NewServeMux()
-	api.RegisterRoutes(v2Router, db)
+	api.RegisterRoutes(v2Router, c)
 
 	mainRouter := http.NewServeMux()
 	mainRouter.Handle("/api/v2/", http.StripPrefix("/api/v2", v2Router))

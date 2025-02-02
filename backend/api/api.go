@@ -3,13 +3,10 @@ package api
 import (
 	"net/http"
 
-	"github.com/Quan0308/main-api/handlers"
-	"github.com/jmoiron/sqlx"
+	"github.com/Quan0308/main-api/interfaces"
 )
 
-func RegisterRoutes(server *http.ServeMux, db *sqlx.DB) {
-	authHandler := handlers.NewAuthHandler(db)
-	authAPI := NewAuthAPI(authHandler)
-
+func RegisterRoutes(server *http.ServeMux, container interfaces.Container) {
+	authAPI := container.GetAuthAPI()
 	authAPI.RegisterRoutes(server)
 }

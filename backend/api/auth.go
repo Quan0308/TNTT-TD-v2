@@ -10,15 +10,15 @@ import (
 	"github.com/Quan0308/main-api/interfaces"
 )
 
-type AuthAPI struct {
+type AuthAPIImpl struct {
 	authHandler interfaces.AuthHandler
 }
 
-func NewAuthAPI(authHandler interfaces.AuthHandler) *AuthAPI {
-	return &AuthAPI{authHandler: authHandler}
+func NewAuthAPI(authHandler interfaces.AuthHandler) interfaces.AuthAPI {
+	return &AuthAPIImpl{authHandler: authHandler}
 }
 
-func (api *AuthAPI) SignInHandler(w http.ResponseWriter, r *http.Request) {
+func (api *AuthAPIImpl) LogInHandler(w http.ResponseWriter, r *http.Request) {
 	var payload authDto.LoginDto
 
 	decodeErr := utils.Decode(r, &payload)
@@ -64,6 +64,6 @@ func (api *AuthAPI) SignInHandler(w http.ResponseWriter, r *http.Request) {
 	utils.Response(w, response)
 }
 
-func (api *AuthAPI) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("POST /login", api.SignInHandler)
+func (api *AuthAPIImpl) RegisterRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("POST /login", api.LogInHandler)
 }
