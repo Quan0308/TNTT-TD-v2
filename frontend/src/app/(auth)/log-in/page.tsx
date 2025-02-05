@@ -25,6 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { SignInService } from "@/services";
 // import GoogleOAuthForm from "../OAuth/GoogleOAuth";
 
 const FormSchema = z.object({
@@ -44,16 +45,14 @@ export default function SignIn() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const result = await signInWithEmailAndPassword(data);
-    const resultJson = JSON.parse(result);
+    const credential = await SignInService(data.email, data.password);
 
-    if (resultJson?.data?.session) {
+    console.log("credential: ", credential);
+    if (credential) {
       toast.success("Log in successfully.");
       router.push("/");
-    } else if (resultJson?.error?.message) {
-      toast.error(resultJson.error.message);
     } else {
-      router.push("/");
+      toast.error("fail");
     }
   }
 
