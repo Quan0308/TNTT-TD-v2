@@ -2,9 +2,13 @@ package repositories
 
 import (
 	"context"
+	"errors"
+	"log"
 
+	userEnum "github.com/Quan0308/main-api/enums/user"
 	"github.com/Quan0308/main-api/interfaces"
 	"github.com/Quan0308/main-api/models"
+	"github.com/google/uuid"
 )
 
 type UserRepositoryHandler struct {
@@ -15,14 +19,38 @@ func NewUserRepository(uow interfaces.UnitOfWork) interfaces.UserRepository {
 	return &UserRepositoryHandler{uow: uow}
 }
 
-func (r *UserRepositoryHandler) GetByEmail(ctx context.Context, email string) (*models.User, error) {
-	var user models.User
-	query := "SELECT * FROM users WHERE email = ?"
+func (r *UserRepositoryHandler) GetCurrentUserByUid(ctx context.Context, uid string) (*models.CurrentUser, error) {
+	type UserWithRoles struct {
+		Id     uuid.UUID     `db:"id"`
+		RoleId userEnum.Role `db:"role_id"`
+	}
 
-	err := r.uow.GetContext(ctx, &user, query, email)
+	var userWithRoles []UserWithRoles
+	query := "SELECT users.id, ra.role_id FROM users LEFT JOIN role_assignments ra ON user_id = users.id WHERE firebase_uid = ?"
+
+	err := r.uow.SelectContext(ctx, &userWithRoles, query, uid)
+
 	if err != nil {
+		log.Printf("error: %s", err)
 		return nil, err
 	}
 
-	return &user, nil
+	currentUser := make(map[uuid.UUID]*models.CurrentUser)
+
+	for _, row := range userWithRoles {
+		if _, exists := currentUser[row.Id]; !exists {
+			currentUser[row.Id] = &models.CurrentUser{
+				Id:    row.Id,
+				Roles: []userEnum.Role{},
+			}
+		}
+		if row.RoleId > 0 {
+			currentUser[row.Id].Roles = append(currentUser[row.Id].Roles, row.RoleId)
+		}
+	}
+	for _, user := range currentUser {
+		return user, nil
+	}
+
+	return nil, errors.New("user not found")
 }

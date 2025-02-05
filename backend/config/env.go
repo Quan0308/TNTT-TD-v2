@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	ADDR              string
-	DRIVER            string
-	CONNECTION_STRING string
+	ADDR               string
+	DRIVER             string
+	CONNECTION_STRING  string
+	SI_SERVICE_ACCOUNT string
 }
 
 func initConfig() Config {
@@ -20,9 +21,10 @@ func initConfig() Config {
 	}
 
 	return Config{
-		ADDR:              ":" + getEnv("PORT", "8080"),
-		DRIVER:            getEnv("DRIVER", ""),
-		CONNECTION_STRING: getEnv("CONNECTION_STRING", ""),
+		ADDR:               ":" + getEnv("PORT", "8080"),
+		DRIVER:             getEnv("DRIVER", ""),
+		CONNECTION_STRING:  getEnv("CONNECTION_STRING", ""),
+		SI_SERVICE_ACCOUNT: getEnv("SI_SERVICE_ACCOUNT", ""),
 	}
 }
 

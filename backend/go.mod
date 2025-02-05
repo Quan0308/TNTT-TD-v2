@@ -14,6 +14,8 @@ require (
 	dario.cat/mergo v1.0.1 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	firebase.google.com/go v3.13.0+incompatible // indirect
+	firebase.google.com/go/v4 v4.15.1 // indirect
+	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/air-verse/air v1.61.7 // indirect
 	github.com/bep/godartsass v1.2.0 // indirect
 	github.com/bep/godartsass/v2 v2.1.0 // indirect
@@ -32,6 +34,7 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gohugoio/hugo v0.134.3 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/s2a-go v0.1.8 // indirect
@@ -64,6 +67,7 @@ require (
 	golang.org/x/time v0.6.0 // indirect
 	google.golang.org/api v0.191.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
+	google.golang.org/appengine/v2 v2.0.2 // indirect
 	google.golang.org/genproto v0.0.0-20240812133136-8ffd90a71988 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240812133136-8ffd90a71988 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240812133136-8ffd90a71988 // indirect

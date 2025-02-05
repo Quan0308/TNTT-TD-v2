@@ -3,8 +3,6 @@ package interfaces
 import (
 	"context"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 type AuthAPI interface {
@@ -13,5 +11,5 @@ type AuthAPI interface {
 }
 
 type AuthHandler interface {
-	LogIn(ctx context.Context, email string, password string) (uuid.UUID, error)
+	LogIn(ctx context.Context, uid string) (string, error)
 }

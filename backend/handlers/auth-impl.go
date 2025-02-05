@@ -3,35 +3,47 @@ package handlers
 import (
 	"context"
 
+	"firebase.google.com/go/auth"
 	"github.com/Quan0308/main-api/interfaces"
-	"github.com/google/uuid"
 )
 
 type authHandlerImpl struct {
-	uow      interfaces.UnitOfWork
-	userRepo interfaces.UserRepository
+	uow                interfaces.UnitOfWork
+	userRepo           interfaces.UserRepository
+	firebaseAuthServie interfaces.FirebaseAuthService
 }
 
-func NewAuthHandler(uow interfaces.UnitOfWork, userRepo interfaces.UserRepository) interfaces.AuthHandler {
+func NewAuthHandler(uow interfaces.UnitOfWork, userRepo interfaces.UserRepository, firebaseAuthServie interfaces.FirebaseAuthService) interfaces.AuthHandler {
 	return &authHandlerImpl{
-		uow:      uow,
-		userRepo: userRepo,
+		uow:                uow,
+		userRepo:           userRepo,
+		firebaseAuthServie: firebaseAuthServie,
 	}
 }
 
-func (a *authHandlerImpl) LogIn(ctx context.Context, email string, password string) (uuid.UUID, error) {
+func (a *authHandlerImpl) LogIn(ctx context.Context, uid string) (string, error) {
 	err := a.uow.Begin()
 	if err != nil {
-		return uuid.Nil, err
+		return "", err
 	}
 
-	user, err := a.userRepo.GetByEmail(ctx, email)
+	currentUser, err := a.userRepo.GetCurrentUserByUid(ctx, uid)
 
 	if err != nil {
 		a.uow.RollBack()
-		return uuid.Nil, err
+		return "", err
+	}
+
+	accessToken, err := a.firebaseAuthServie.GenerateCustomToken(ctx, uid, currentUser)
+	if err != nil {
+		a.uow.RollBack()
+		return "", err
 	}
 
 	a.uow.Commit()
-	return user.Id, nil
+	return accessToken, nil
+}
+
+func (a *authHandlerImpl) VerifyIdToken(ctx context.Context, idToken string) (*auth.Token, error) {
+	return a.firebaseAuthServie.VerifyIdToken(ctx, idToken)
 }

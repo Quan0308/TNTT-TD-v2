@@ -7,5 +7,5 @@ import (
 )
 
 type UserRepository interface {
-	GetByEmail(ctx context.Context, email string) (*models.User, error)
+	GetCurrentUserByUid(ctx context.Context, email string) (*models.CurrentUser, error)
 }

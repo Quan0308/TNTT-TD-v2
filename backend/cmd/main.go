@@ -29,9 +29,11 @@ func main() {
 	mainRouter := http.NewServeMux()
 	mainRouter.Handle("/api/v2/", http.StripPrefix("/api/v2", v2Router))
 
+	corsHandler := middlewares.EnableCORS(mainRouter)
+
 	server := http.Server{
 		Addr:    config.Envs.ADDR,
-		Handler: middlewares.Logging(mainRouter),
+		Handler: middlewares.Logging(corsHandler),
 	}
 
 	log.Println("Listening on", server.Addr)

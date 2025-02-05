@@ -1,10 +1,13 @@
 package interfaces
 
-import "github.com/Quan0308/main-api/models"
+import (
+	"context"
+
+	"firebase.google.com/go/auth"
+	"github.com/Quan0308/main-api/models"
+)
 
 type FirebaseAuthService interface {
-	CheckAuthentication(email string, password string)
-	UpdatePassword(firebaseUid string)
-	GeneratePairTokens(firebaseUid string, claims models.CurrentUser) (string, string)
-	ValidateToken(token string) bool
+	GenerateCustomToken(ctx context.Context, uid string, claims *models.CurrentUser) (string, error)
+	VerifyIdToken(ctx context.Context, idToken string) (*auth.Token, error)
 }
