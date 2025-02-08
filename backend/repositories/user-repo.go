@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 
-	userEnum "github.com/Quan0308/main-api/enums/user"
+	"github.com/Quan0308/main-api/enums"
 	"github.com/Quan0308/main-api/interfaces"
 	"github.com/Quan0308/main-api/models"
 	"github.com/google/uuid"
@@ -21,8 +21,8 @@ func NewUserRepository(uow interfaces.UnitOfWork) interfaces.UserRepository {
 
 func (r *UserRepositoryHandler) GetCurrentUserByUid(ctx context.Context, uid string) (*models.CurrentUser, error) {
 	type UserWithRoles struct {
-		Id     uuid.UUID     `db:"id"`
-		RoleId userEnum.Role `db:"role_id"`
+		Id     uuid.UUID  `db:"id"`
+		RoleId enums.Role `db:"role_id"`
 	}
 
 	var userWithRoles []UserWithRoles
@@ -41,7 +41,7 @@ func (r *UserRepositoryHandler) GetCurrentUserByUid(ctx context.Context, uid str
 		if _, exists := currentUser[row.Id]; !exists {
 			currentUser[row.Id] = &models.CurrentUser{
 				Id:    row.Id,
-				Roles: []userEnum.Role{},
+				Roles: []enums.Role{},
 			}
 		}
 		if row.RoleId > 0 {

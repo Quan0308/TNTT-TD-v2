@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Quan0308/main-api/core/dtos"
+	"github.com/Quan0308/main-api/dtos"
 )
 
 func Decode(r *http.Request, val interface{}) error {

@@ -1,4 +1,4 @@
-package userEnum
+package enums
 
 type Gender int
 type Status string

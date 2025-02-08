@@ -1,4 +1,4 @@
-package messagesEnum
+package enums
 
 type AuthMessage string
 

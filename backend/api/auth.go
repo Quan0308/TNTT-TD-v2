@@ -4,11 +4,10 @@ import (
 	"net/http"
 
 	"firebase.google.com/go/auth"
-	"github.com/Quan0308/main-api/core/dtos"
 	"github.com/Quan0308/main-api/core/middlewares"
 	"github.com/Quan0308/main-api/core/utils"
-	authDto "github.com/Quan0308/main-api/dtos"
-	messagesEnum "github.com/Quan0308/main-api/enums/messages"
+	"github.com/Quan0308/main-api/dtos"
+	"github.com/Quan0308/main-api/enums"
 	"github.com/Quan0308/main-api/interfaces"
 	"github.com/Quan0308/main-api/types"
 )
@@ -38,13 +37,13 @@ func (api *AuthAPIImpl) LogInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := authDto.LoginRes{
+	data := dtos.LoginRes{
 		AccessToken: accessToken,
 	}
 
 	response := dtos.Response{
 		Data:       data,
-		Message:    string(messagesEnum.LoginSuccess),
+		Message:    string(enums.LoginSuccess),
 		StatusCode: http.StatusOK,
 	}
 
